@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const meetups = require("./routes/meetups");
 require("dotenv").config();
 
+app.use(express.json());
+
 app.use("/api/v1/meetups", meetups);
 
 const start = async () => {

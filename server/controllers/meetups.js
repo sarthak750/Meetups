@@ -1,21 +1,64 @@
-const getAllMeetups = (req, res) => {
-  res.send("All the meetups");
+const Meetup = require("../models/Meetup");
+
+const getAllMeetups = async (req, res) => {
+  try {
+    const meetups = await Meetup.find({});
+    res.status(200).json({ meetups });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 };
 
-const createMeetup = (req, res) => {
-  res.send("Create meetup");
+const createMeetup = async (req, res) => {
+  try {
+    const meetup = await Meetup.create(req.body);
+    res.status(201).json({ meetup });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 };
 
-const getMeetup = (req, res) => {
-  res.send("Single meetup");
+const getMeetup = async (req, res) => {
+  try {
+    const { id: meetupID } = req.params;
+    const meetup = await Meetup.findById(meetupID);
+    if (!meetup) {
+      return res.status(404).json({ msg: `No task with Id : ${meetupID}` });
+    }
+
+    res.status(200).json({ meetup });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 };
 
-const updateMeetup = (req, res) => {
-  res.send("Update meetup");
+const updateMeetup = async (req, res) => {
+  try {
+    const { id: meetupID } = req.params;
+    const meetup = await Meetup.findByIdAndUpdate(meetupID, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!meetup) {
+      return res.status(404).json({ msg: `No task with Id : ${meetupID}` });
+    }
+    res.status(200).json({ meetup });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 };
 
-const deleteMeetup = (req, res) => {
-  res.send("Delete Meetup");
+const deleteMeetup = async (req, res) => {
+  try {
+    const { id: meetupID } = req.params;
+    const meetup = await Meetup.findByIdAndDelete(meetupID);
+    if (!meetup) {
+      return res.status(404).json({ msg: `No task with Id : ${meetupID}` });
+    }
+    res.status(200).json({ meetup });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 };
 
 module.exports = {
