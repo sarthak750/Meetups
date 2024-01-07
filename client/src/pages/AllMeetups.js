@@ -6,15 +6,16 @@ function AllMeetupsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [meetups, setMeetups] = useState([]);
 
+  const fetchMeetups = async () => {
+    const response = await axios.get("http://localhost:5000/api/v1/meetups/");
+    const getMeetups = await response.data.meetups;
+    console.log(getMeetups);
+    setMeetups(getMeetups);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get("http://localhost:5000/api/v1/meetups/");
-      const getMeetups = await response.data.meetups;
-      console.log(getMeetups);
-      setMeetups(getMeetups);
-      setIsLoading(false);
-    };
-    fetchData();
+    fetchMeetups();
   }, []);
 
   if (isLoading) {
@@ -28,7 +29,7 @@ function AllMeetupsPage() {
   return (
     <section>
       <h1>All Meetups</h1>
-      <MeetupList meetups={meetups} />
+      <MeetupList meetups={meetups} fetchMeetups={fetchMeetups} />
     </section>
   );
 }
